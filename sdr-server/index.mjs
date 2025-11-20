@@ -424,7 +424,7 @@ class SDRServer {
     ws.send(JSON.stringify({
       type: 'playback_started',
       data: { recordingId }
-    });
+    }));
   }
 
   broadcast(message) {
