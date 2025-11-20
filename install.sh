@@ -13,13 +13,29 @@ echo ""
 
 # Detect OS
 detect_os() {
-    if [[ "$OSTYPE" == "linux-gnu"* ]]; then
+    if [[ "$OSTYPE" == "linux-gnu"* ]] || [[ "$OSTYPE" == "linux" ]]; then
         if [ -f /etc/os-release ]; then
             . /etc/os-release
             OS=$ID
             OS_VERSION=$VERSION_ID
+
+            # Handle derivatives
+            case "$ID" in
+                linuxmint|pop|zorin|elementary)
+                    OS="ubuntu"  # Ubuntu-based
+                    ;;
+                raspbian)
+                    OS="debian"  # Debian-based
+                    ;;
+            esac
+        elif [ -f /etc/debian_version ]; then
+            OS="debian"
+        elif [ -f /etc/fedora-release ]; then
+            OS="fedora"
+        elif [ -f /etc/arch-release ]; then
+            OS="arch"
         else
-            OS="unknown"
+            OS="linux-generic"
         fi
     elif [[ "$OSTYPE" == "darwin"* ]]; then
         OS="macos"
@@ -176,8 +192,44 @@ case "$OS" in
         fi
         ;;
 
+    linux-generic)
+        echo "⚠️  Generic Linux detected, attempting common installation methods..."
+
+        # Try different package managers
+        if command -v apt-get &> /dev/null; then
+            echo "Found apt-get, installing via Debian/Ubuntu method..."
+            $SUDO apt-get update
+            $SUDO apt-get install -y rtl-sdr hackrf libusb-1.0-0-dev pkg-config
+            if [ -n "$SUDO_USER" ]; then
+                $SUDO usermod -a -G plugdev $SUDO_USER
+            elif [ -n "$USER" ] && [ "$USER" != "root" ]; then
+                $SUDO usermod -a -G plugdev $USER
+            fi
+        elif command -v dnf &> /dev/null; then
+            echo "Found dnf, installing via Fedora method..."
+            $SUDO dnf install -y rtl-sdr hackrf libusb-devel
+            if [ -n "$SUDO_USER" ]; then
+                $SUDO usermod -a -G dialout $SUDO_USER
+            elif [ -n "$USER" ] && [ "$USER" != "root" ]; then
+                $SUDO usermod -a -G dialout $USER
+            fi
+        elif command -v pacman &> /dev/null; then
+            echo "Found pacman, installing via Arch method..."
+            $SUDO pacman -S --noconfirm rtl-sdr hackrf libusb
+            if [ -n "$SUDO_USER" ]; then
+                $SUDO usermod -a -G uucp $SUDO_USER
+            elif [ -n "$USER" ] && [ "$USER" != "root" ]; then
+                $SUDO usermod -a -G uucp $USER
+            fi
+        else
+            echo "⚠️  No recognized package manager found"
+            echo "   Please install manually:"
+            echo "   - RTL-SDR: https://www.rtl-sdr.com/rtl-sdr-quick-start-guide/"
+            echo "   - HackRF: https://github.com/greatscottgadgets/hackrf/releases"
+        fi
+        ;;
     *)
-        echo "⚠️  Automatic SDR tool installation not supported for your OS"
+        echo "⚠️  Automatic SDR tool installation not supported for your OS ($OS)"
         echo "   Please install manually:"
         echo "   - RTL-SDR: https://www.rtl-sdr.com/rtl-sdr-quick-start-guide/"
         echo "   - HackRF: https://github.com/greatscottgadgets/hackrf/releases"
@@ -263,8 +315,21 @@ echo "  ✅ IceNet SDR application"
 echo ""
 
 if [[ "$OS" == "linux-gnu"* ]] || [[ "$OS" == "ubuntu" ]] || [[ "$OS" == "debian" ]] || [[ "$OS" == "fedora" ]] || [[ "$OS" == "arch" ]]; then
-    echo "⚠️  IMPORTANT: You may need to log out and back in for USB device"
-    echo "   permissions to take effect (if you were added to a group)"
+    echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+    echo "  USB Device Permissions"
+    echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+    echo ""
+    echo "To activate USB device permissions, you have 2 options:"
+    echo ""
+    echo "  Option 1: Apply permissions in current session (RECOMMENDED)"
+    echo "    Run this command to update your current session:"
+    echo ""
+    echo "    newgrp plugdev"
+    echo ""
+    echo "    Then run: npm run start"
+    echo ""
+    echo "  Option 2: Log out and back in"
+    echo "    Permissions will be active after you log out and back in"
     echo ""
 fi
 
