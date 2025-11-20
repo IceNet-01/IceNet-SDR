@@ -57,11 +57,11 @@ export class SignalSimulator {
   }
 
   generateSpectrum(): { magnitude: number[]; frequencies: number[] } {
-    const { fftSize, sampleRate, signals } = this.config;
+    const { fftSize, signals } = this.config;
     const spectrum = new Array(fftSize).fill(-100); // Start with -100 dB noise floor
 
     // Generate frequency bins
-    const frequencies = [];
+    const frequencies: number[] = [];
     for (let i = 0; i < fftSize; i++) {
       const normFreq = (i - fftSize / 2) / fftSize;
       frequencies.push(normFreq);
@@ -80,7 +80,7 @@ export class SignalSimulator {
     signal: SimulatedSignal,
     frequencies: number[]
   ): void {
-    const { sampleRate, fftSize } = this.config;
+    const { sampleRate } = this.config;
     const normalizedFreq = signal.frequency / sampleRate;
 
     switch (signal.type) {

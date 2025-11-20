@@ -5,7 +5,7 @@
 export interface SDRDevice {
   id: string;
   name: string;
-  type: 'rtl-sdr' | 'hackrf' | 'plutosdr' | 'limesdr';
+  type: 'rtl-sdr' | 'hackrf' | 'plutosdr' | 'limesdr' | 'microphone';
   description: string;
   connected: boolean;
   capabilities: DeviceCapabilities;

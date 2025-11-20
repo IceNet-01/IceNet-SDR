@@ -3,8 +3,6 @@
  * Handles WebSocket connection to the SDR server
  */
 
-import { AppState } from '../types';
-
 export class WebSocketManager {
   private ws: WebSocket | null = null;
   private reconnectTimer: NodeJS.Timeout | null = null;

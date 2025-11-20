@@ -3,7 +3,7 @@
  */
 
 import { create } from 'zustand';
-import { AppState, SDRDevice, SpectrumData, Recording, RecordingStatus } from '../types';
+import { AppState, SDRDevice, SpectrumData } from '../types';
 import { WebSocketManager } from '../lib/webSocketManager';
 import { MicrophoneManager } from '../lib/microphoneManager';
 import { SignalSimulator } from '../lib/signalSimulator';
@@ -125,7 +125,7 @@ export const useAppStore = create<AppState>((set, get) => {
     });
   });
 
-  wsManager.on('recording_stopped', (data) => {
+  wsManager.on('recording_stopped', () => {
     set({
       recordingStatus: { isRecording: false }
     });
