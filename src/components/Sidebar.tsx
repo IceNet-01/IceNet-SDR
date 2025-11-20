@@ -5,9 +5,10 @@
 import { useAppStore } from '../store/appStore';
 
 const Sidebar = () => {
-  const { selectedView, setView, currentDevice, isStreaming } = useAppStore();
+  const { selectedView, setView, currentDevice, isStreaming, devices } = useAppStore();
 
   const menuItems = [
+    { id: 'dashboard', label: 'Dashboard', icon: '🏠' },
     { id: 'spectrum', label: 'Spectrum Analyzer', icon: '📊' },
     { id: 'waterfall', label: 'Waterfall', icon: '🌊' },
     { id: 'recordings', label: 'Recordings', icon: '💾' },
@@ -16,6 +17,16 @@ const Sidebar = () => {
 
   return (
     <div className="w-64 bg-gray-800 border-r border-gray-700 flex flex-col">
+      {/* Available devices count */}
+      <div className="p-4 border-b border-gray-700 bg-gray-750">
+        <div className="text-xs text-gray-400 mb-2">Available Devices</div>
+        <div className="text-2xl font-bold text-white">{devices.length}</div>
+        <div className="text-xs text-gray-500 mt-1">
+          {devices.filter(d => d.id === 'microphone_0' || d.id === 'simulator_0').length} virtual,
+          {' '}{devices.filter(d => d.type !== 'microphone').length} hardware
+        </div>
+      </div>
+
       {/* Device status */}
       <div className="p-4 border-b border-gray-700">
         <div className="text-xs text-gray-400 mb-2">Current Device</div>
@@ -55,7 +66,7 @@ const Sidebar = () => {
               <button
                 onClick={() => setView(item.id as any)}
                 className={`w-full text-left px-4 py-3 rounded-lg transition-colors ${
-                  selectedView === item.id
+                  selectedView === item.id || (selectedView === 'spectrum' && item.id === 'dashboard') || (selectedView === 'waterfall' && item.id === 'dashboard')
                     ? 'bg-primary-600 text-white'
                     : 'text-gray-300 hover:bg-gray-700'
                 }`}
