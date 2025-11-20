@@ -10,7 +10,24 @@ const Dashboard = () => {
 
   return (
     <div className="p-6 space-y-6">
-      <h2 className="text-2xl font-bold text-white">Dashboard</h2>
+      <div className="flex items-center justify-between">
+        <h2 className="text-2xl font-bold text-white">Dashboard</h2>
+        <div className="text-sm text-gray-400">
+          {devices.length} device{devices.length !== 1 ? 's' : ''} available
+        </div>
+      </div>
+
+      {/* Quick start guide */}
+      {!currentDevice && devices.length > 0 && (
+        <div className="bg-blue-900 bg-opacity-30 border border-blue-700 rounded-lg p-4">
+          <h3 className="text-lg font-bold text-blue-300 mb-2">🚀 Quick Start</h3>
+          <ol className="text-sm text-blue-200 space-y-1 ml-4 list-decimal">
+            <li>Click <strong>"Connect"</strong> on a device below (try Signal Simulator for instant demo!)</li>
+            <li>Click <strong>"Start Streaming"</strong> in the Device Control panel</li>
+            <li>Go to <strong>"Spectrum Analyzer"</strong> in the sidebar to view the live spectrum</li>
+          </ol>
+        </div>
+      )}
 
       {/* Device control */}
       <DeviceControl />
