@@ -10,7 +10,7 @@ import { SignalSimulator } from '../lib/signalSimulator';
 
 const wsUrl = import.meta.env.DEV
   ? 'ws://localhost:8080'
-  : \`ws://\${window.location.host}\`;
+  : `ws://${window.location.host}`;
 
 const wsManager = new WebSocketManager(wsUrl);
 const micManager = new MicrophoneManager();
@@ -138,7 +138,7 @@ export const useAppStore = create<AppState>((set, get) => {
 
   wsManager.on('error', (data) => {
     console.error('Server error:', data.message);
-    alert(\`Error: \${data.message}\`);
+    alert(`Error: ${data.message}`);
   });
 
   return {
