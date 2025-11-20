@@ -1,0 +1,64 @@
+{
+  "name": "icenet-sdr",
+  "version": "1.0.0",
+  "description": "IceNet SDR - A comprehensive web-based Software Defined Radio application with spectrum analyzer, signal recording, and advanced demodulation capabilities",
+  "main": "sdr-server/index.mjs",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "preview": "vite preview",
+    "server": "node sdr-server/index.mjs",
+    "start": "concurrently \"npm run server\" \"npm run dev\"",
+    "production": "npm run build && node sdr-server/index.mjs",
+    "service:install": "sudo ./install-service.sh",
+    "service:uninstall": "sudo ./uninstall-service.sh",
+    "service:start": "sudo systemctl start icenet-sdr",
+    "service:stop": "sudo systemctl stop icenet-sdr",
+    "service:restart": "sudo systemctl restart icenet-sdr",
+    "service:status": "sudo systemctl status icenet-sdr",
+    "service:logs": "sudo journalctl -u icenet-sdr -f",
+    "cleanup-ports": "lsof -ti:8080 | xargs kill -9 || true"
+  },
+  "keywords": [
+    "sdr",
+    "software-defined-radio",
+    "rtl-sdr",
+    "hackrf",
+    "spectrum-analyzer",
+    "signal-processing",
+    "radio",
+    "websocket"
+  ],
+  "author": "Northern Plains IT, LLC and OnyxVZ, LLC",
+  "license": "SEE LICENSE IN LICENSE",
+  "dependencies": {
+    "ws": "^8.16.0",
+    "express": "^4.18.2",
+    "express-ws": "^5.0.2",
+    "rtl-sdr": "^0.1.0",
+    "fftw": "^1.0.0",
+    "winston": "^3.11.0",
+    "node-wav": "^0.0.2",
+    "commander": "^11.1.0"
+  },
+  "devDependencies": {
+    "@types/react": "^18.2.43",
+    "@types/react-dom": "^18.2.17",
+    "@types/ws": "^8.5.10",
+    "@vitejs/plugin-react": "^4.2.1",
+    "autoprefixer": "^10.4.16",
+    "concurrently": "^8.2.2",
+    "postcss": "^8.4.32",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "recharts": "^2.10.3",
+    "tailwindcss": "^3.4.0",
+    "typescript": "^5.3.3",
+    "vite": "^5.0.8",
+    "zustand": "^4.4.7"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}

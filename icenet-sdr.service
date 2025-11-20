@@ -1,0 +1,26 @@
+[Unit]
+Description=IceNet SDR Server
+After=network.target
+Wants=network.target
+
+[Service]
+Type=simple
+User=REPLACE_WITH_USER
+WorkingDirectory=REPLACE_WITH_WORKDIR
+ExecStart=/usr/bin/node REPLACE_WITH_WORKDIR/sdr-server/index.mjs
+Restart=always
+RestartSec=10
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=icenet-sdr
+
+# Security settings
+NoNewPrivileges=true
+PrivateTmp=true
+
+# Environment
+Environment=NODE_ENV=production
+Environment=PORT=8080
+
+[Install]
+WantedBy=multi-user.target
